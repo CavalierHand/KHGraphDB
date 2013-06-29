@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using KHGraphDB.Structure;
 
 using KHGraphDB.Algorithm;
+using System.Windows.Forms;
 
 namespace Demo01
 {
@@ -39,7 +40,7 @@ namespace Demo01
 
             graph.AddVertex(peiming, student);
             graph.AddVertex(yidong, student);
-            graph.AddVertex(weidong, student);
+            graph.AddVertex(weidong);
 
             Console.WriteLine(peiming.ToString());
             Console.WriteLine(yidong.ToString());
@@ -49,29 +50,36 @@ namespace Demo01
             Console.WriteLine(yidong.IncomingEdges.Count());
             Console.WriteLine(weidong.IncomingEdges.Count());
 
-            
 
-            Edge friendPY = new Edge(peiming, yidong, new Dictionary<string, object>(){
+
+            Edge friendPY = new Edge(peiming, yidong, new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase){
                 {"relationship","friend"},
             });
 
-            Edge friendYW = new Edge(yidong, weidong, new Dictionary<string, object>(){
+            Edge friendYP = new Edge(yidong, peiming, new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase){
+                {"relationship",null},
+            });
+
+            Edge friendYW = new Edge(yidong, weidong, new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase){
                 {"relationship","friend"},
             });
 
             graph.AddEdge(friendPY);
+            graph.AddEdge(friendYP);
             graph.AddEdge(friendYW);
 
             Console.WriteLine(peiming.InDegree);
             Console.WriteLine(peiming.OutDegree);
             Console.WriteLine(yidong.InDegree);
             Console.WriteLine(yidong.OutDegree);
+            Console.WriteLine(weidong.InDegree);
+            Console.WriteLine(weidong.OutDegree);
 
             Console.WriteLine(peiming.ToString());
             Console.WriteLine(yidong.ToString());
             Console.WriteLine(weidong.ToString());
 
-
+            Console.WriteLine(weidong["Name"]);
             Console.WriteLine("+++");
             BreadthFirstSearch bfs01 = new BreadthFirstSearch();
             var path = bfs01.Search(graph, peiming, weidong);
@@ -102,6 +110,13 @@ namespace Demo01
 
             Console.ReadKey(true);
 
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Form1 form = new Form1();
+            form.AddGraph(graph);
+            Application.Run(form);
+
+            
 
         }
     }

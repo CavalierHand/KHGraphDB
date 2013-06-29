@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using KHGraphDB.Structure;
 using KHGraphDBMS.KHMenu;
 
 
@@ -22,6 +23,12 @@ namespace KHGraphDBMS
         private bool _ReadyToZoomY = false;
         private int _MouseDownX = 0;
         private int _MouseDownY = 0;
+
+        #endregion
+
+        #region Prop
+        Graph graph = new Graph();
+        Grammar.Grammar grammar;
 
         #endregion
 
@@ -42,6 +49,54 @@ namespace KHGraphDBMS
             pbLogo.MouseDown += FormMain_MouseDown;
             pbLogo.MouseUp += FormMain_MouseUp;
             pbLogo.MouseMove += FormMain_MouseMove;
+
+            #region Graph test
+
+            graph = new Graph();
+            grammar = new Grammar.Grammar(graph);
+
+            KHGraphDB.Structure.Type student = new KHGraphDB.Structure.Type(new Dictionary<string, object>(){
+                {"Name","Student"},
+            });
+
+            Vertex peiming = new Vertex(new Dictionary<string, object>(){
+                {"Name","Peiming"},
+                {"Age","22"},
+                {"Game","Gal"}
+            });
+
+            Vertex weidong = new Vertex(new Dictionary<string, object>(){
+                {"Name","Weidong"},
+                {"Age","22"}
+            });
+
+            Vertex yidong = new Vertex(new Dictionary<string, object>(){
+                {"Name","Yidong"},
+                {"Age","21"}
+            });
+
+            graph.AddType(student);
+
+            graph.AddVertex(peiming, student);
+            graph.AddVertex(yidong, student);
+            graph.AddVertex(weidong, student);
+
+            Edge friendPY = new Edge(peiming, yidong, new Dictionary<string, object>(){
+                {"relationship","friend"},
+            });
+
+            Edge friendYW = new Edge(yidong, weidong, new Dictionary<string, object>(){
+                {"relationship","friend"},
+            });
+
+            graph.AddEdge(friendPY);
+            graph.AddEdge(friendYW);
+
+            panelGraph.Graph = graph;
+
+            #endregion
+
+
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -120,6 +175,11 @@ namespace KHGraphDBMS
             //    nIndex += 5;
             //}
             //richTextBox1.Select(nSelectStart, nSelectLength);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            grammar.Exert(textArea1.CodeText);
         }
 
        
